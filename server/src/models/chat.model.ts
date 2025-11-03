@@ -21,7 +21,7 @@ const chatSchema = new Schema<ChatDocument>({
     lastMessage : {
         type : Schema.Types.ObjectId,
         ref : "Message",
-        required : true
+        default : null
     },
     isGroup : {
         type : Boolean,
