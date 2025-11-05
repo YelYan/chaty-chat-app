@@ -119,3 +119,27 @@ export const initializeSocket = (httpServer : HTTPServer)  => {
         })
     })
 }
+
+export const getIO = () => {
+    if(!io) throw new Error("Socket.io not initialized");
+    return io;
+}
+
+/**
+ * Real-life example:
+ *
+ * Alice creates a family group chat with Bob and Carol
+ *
+ * This function sends "New chat!" notifications to Bob and Carol's phones
+ * 
+ */
+
+export const emitNewChatToParticipants = (participantIdStrings : string[] = [], chat : any) => {
+    const io = getIO()
+    //  Sends a real-time notification to each participant that a new chat was created.
+    for(const participantId of participantIdStrings) {
+        io.to(`user:${participantId}`).emit("chat:new", chat);
+    }
+}
+
+
