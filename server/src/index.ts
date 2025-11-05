@@ -10,9 +10,15 @@ import { HTTPSTATUS } from "./config/http.config.js";
 import  connectDatabase  from './config/database.config.js';
 import { errHandler } from './middlewares/errHandler.middleware.js';
 import routes from './routes/index.js';
+import http from "http";
 import "./config/passport.config.js"
+import { initializeSocket } from './lib/socket.js';
 
 const app = express();
+const server = http.createServer(app)
+
+//socket
+initializeSocket(server);
 
 app.use(express.json({limit : "10mb"}));
 app.use(cookieParser());
@@ -40,7 +46,7 @@ app.use(errHandler);
 
 //  Server listen 
 const startServer = () => {
-    app.listen(Env.PORT,async () => {
+    server.listen(Env.PORT,async () => {
         await connectDatabase();
         console.log(`Server running on port ${Env.PORT} in ${Env.NODE_ENV} mode`)
     })
