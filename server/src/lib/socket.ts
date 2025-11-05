@@ -143,3 +143,37 @@ export const emitNewChatToParticipants = (participantIdStrings : string[] = [], 
 }
 
 
+
+export const emitNewMessageToChatRoom = (
+    senderId : string | undefined,// Who sent the message
+    chatId : string | undefined,// Which chat room
+    newMessage : any // The actual message
+) => {
+    const io = getIO();
+    const senderSocketId = onlineUsers.get(String(senderId));
+
+    console.log(senderId, "senderId");
+    console.log(senderSocketId, "sender socketid exist");
+    console.log("All online users:", Object.fromEntries(onlineUsers));
+
+    if(senderSocketId){
+        // Send to everyone EXCEPT the sender (they already see it)
+        io.to(`chat:${chatId}`).except(senderSocketId).emit("message:new", newMessage);
+    } else {
+        // Send to everyone (sender might be offline)
+        io.to(`chat:${chatId}`).emit("message:new", newMessage);
+    }
+}
+
+export const emitLastMessageToParticipants = (
+    allParticipantIds: string[] = [] ,
+    chatId : string | undefined, 
+    lastMessage : any) => {
+    const io = getIO(); 
+
+    const payload = {chatId , lastMessage};
+    // Sends a real-time notification to each participant about the last message in the chat.
+    for(const participantId of allParticipantIds) {
+        io.to(`user:${participantId}`).emit("message:new", payload);
+    }
+}
