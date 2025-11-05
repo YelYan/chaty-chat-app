@@ -73,7 +73,7 @@ export const getSingleChatService = async (chatId : string , userId : string) =>
     const chat = await ChatModel.findOne({
         _id : chatId,
         participants : {
-            $in : [userId]
+            $in : [userId] // get all user except the current user
         }
     })
     .populate("participants", "name avatar");

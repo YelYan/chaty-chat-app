@@ -18,7 +18,7 @@ export const createChatController = asyncHandler(async (req : Request, res : Res
 
     return res.status(HTTPSTATUS.CREATED).json({
         success : true,
-        message : "Chat created or retrieved successfully ",
+        message : "Chat created or retrieved successfully",
         data: chat,
     })
 })
